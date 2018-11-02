@@ -5,11 +5,18 @@ const BASE_URL = 'https://c.y.qq.com/v8/fcg-bin/fcg_v8_singer_track_cp.fcg?';
 const RELOAD_TIMES = 3;
 
 let current_reload_times = 0;					//当前重启任务次数
-let singer_mid_list = getSingerMid();			//所有的singer_mid数组
-let singer_mid_total = singer_mid_list.length;	//总任务数
-let curr_mid = singer_mid_list.shift();			//当前任务singer_mid
+let singer_mid_list = null;			//所有的singer_mid数组
+let singer_mid_total = 0;	//总任务数
+let curr_mid = '';			//当前任务singer_mid
 
-getSong();
+getSingerMid().then((data) => {
+	singer_mid_list = data;
+	singer_mid_total = singer_mid_list.length;
+	curr_mid = singer_mid_list.shift();
+	getSong();
+}).catch((err) => {
+	console.log('获取singer_mid异常：',err);
+})
 
 /**
  * [getSong 请求构建URL获取数据]
@@ -21,6 +28,7 @@ async function getSong() {
 		try {
 			let url = getUrl(curr_mid);
 			let res = await http(url);
+			console.log('爬取结果：',res.slice(0,100));
 			res = setSqlData(dataProcessing(res));
 			if (res.length) {
 				let insert_result = await mysql.insert(sql, res);
@@ -55,7 +63,11 @@ async function getSingerMid() {
 	return singer_mid_list;
 }
 
-/**/
+/**
+ * [setSqlData 把数据转为批量插入数据库的格式]
+ * @param {[Object]} data [原始对象数据]
+ * @return {[Array]} [[],[],[],...]格式的数据
+ */
 function setSqlData(data) {
 	let result = [];
 	let list = data.data.list;
