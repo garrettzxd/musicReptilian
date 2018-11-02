@@ -2,9 +2,8 @@ const mysql = require('../sql/index')
 const http = require('../http/index')
 const {dataProcessing} = require('../common/common')
 const BASE_URL = 'https://c.y.qq.com/v8/fcg-bin/fcg_v8_singer_track_cp.fcg?';
-const RELOAD_TIMES = 3;
 
-let current_reload_times = 0;					//当前重启任务次数
+let error_times = 0;					//当前重启任务次数
 let singer_mid_list = null;			//所有的singer_mid数组
 let singer_mid_total = 0;	//总任务数
 let curr_mid = '';			//当前任务singer_mid
@@ -37,14 +36,12 @@ async function getSong() {
 			}else {
 				console.log('数据为空！跳过该请求！');
 			}
+			console.log('error_times',error_times);
 			console.log('');
 			curr_mid = singer_mid_list.shift();
 		}catch(err) {
 			console.log('任务出现异常：', err);
-			if (current_reload_times++ < RELOAD_TIMES) {
-				console.log('尝试重启爬虫中...',)
-				getSong();
-			}
+			error_times++;
 		}
 	}
 }
