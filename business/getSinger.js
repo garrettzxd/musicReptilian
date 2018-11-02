@@ -1,6 +1,6 @@
-let http = require('./http/index')
-let mysql = require('./sql/index')
-let dataProcessing = require('./common/common')
+let http = require('../http/index')
+let mysql = require('../sql/index')
+let {dataProcessing} = require('../common/common')
 let index = 1;				//当前页码
 const TOTAL_PAGE = 297;
 const BASE_URL = 'https://u.y.qq.com/cgi-bin/musicu.fcg?';
@@ -26,9 +26,9 @@ getAll();
  * @return {[none]} [description]
  */
 async function getAll() {
+	let ins = "INSERT INTO singer(`country`,`singer_id`,`singer_mid`, `singer_name`, `singer_pic`) VALUES ?";
 	while(index <= TOTAL_PAGE) {
 		let url = getUrl(index);		//拼接爬取数据的URL
-		console.log('当前爬取页面：页面',index);
 		let res = await http(url);		//获取数据
 		console.log('已获取数据');
 		res = dataProcessing(res);		//数据格式化
@@ -38,8 +38,7 @@ async function getAll() {
 			getAll();
 			break;
 		}
-		console.log('数据处理完成，将要插入数据')
-		let ins_res = await mysql.insert(ins_data);
+		let ins_res = await mysql.insert(ins, ins_data);
 		console.log('插入结果：',ins_res);
 		console.log('');
 		index++;
@@ -64,7 +63,7 @@ function dataCheck(data) {
 /**
  * [insertData 将数据处理成批量插入数据库的格式]
  * @param  {[Array]} list [爬过来的歌手列表]
- * @return {[Array]}      [数据格式变更后的结果]
+ * @return {[Array]}      [数据格式变更后的结果,(结构如下：[[],[],[],...]) ]
  */
 function insertData(list) {
 	let result = [];

@@ -7,22 +7,20 @@ const pool = mysql.createPool({
 	database: 'music'
 })
 
-function insert(data) {
+function insert(sql, data) {
 	return new Promise((resolve, reject) => {
 		pool.getConnection((err, connection) => {
 			if (err) {
 				console.log(data);
 				reject(err);
 			};
-			let ins = "INSERT INTO singer(`country`,`singer_id`,`singer_mid`, `singer_name`, `singer_pic`) VALUES ?";
 			console.log('数据更新到数据库中....');
-			connection.query(ins, [data], (err, res, fields) => {
+			connection.query(sql, [data], (err, res, fields) => {
 				if (err) {
 					console.log('err data:',data);
 					reject(err);
 				};
 				connection.release();
-				console.log('已释放数据库链接');
 				resolve('SUCCESS');
 			})
 		})

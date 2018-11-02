@@ -22,7 +22,7 @@ module.exports = function http(url) {
 	option.url = url;
 	return new Promise((reslove, reject) => {
 		request(option,function(err, res, body) {
-			reslove(body);
+			err ? reject(err) : reslove(body);
 		})
 	})
 }
