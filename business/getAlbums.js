@@ -44,9 +44,9 @@ async function getAll() {
  *[setReptilianUrl 拼接爬虫URL]
  * @return {[String]} [description]
  * */
-function setReptilianUrl(index) {
+function setReptilianUrl(index, area) {
     let start = SINGLE_REQUEST_COUNT * index;
-    return `${BASE_URL}callback=getUCGI5950166997774664&g_tk=347344524&jsonpCallback=getUCGI5950166997774664&loginUin=${LOGIN_ACCOUNT}&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0&data=%7B%22albumlib%22%3A%7B%22method%22%3A%22get_album_by_tags%22%2C%22param%22%3A%7B%22area%22%3A1%2C%22company%22%3A-1%2C%22genre%22%3A-1%2C%22type%22%3A-1%2C%22year%22%3A-1%2C%22sort%22%3A2%2C%22get_tags%22%3A1%2C%22sin%22%3A${start}%2C%22num%22%3A${SINGLE_REQUEST_COUNT}%2C%22click_albumid%22%3A0%7D%2C%22module%22%3A%22music.web_album_library%22%7D%7D`
+    return `${BASE_URL}callback=getUCGI5950166997774664&g_tk=347344524&jsonpCallback=getUCGI5950166997774664&loginUin=${LOGIN_ACCOUNT}&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0&data=%7B%22albumlib%22%3A%7B%22method%22%3A%22get_album_by_tags%22%2C%22param%22%3A%7B%22area%22%3A${area}%2C%22company%22%3A-1%2C%22genre%22%3A-1%2C%22type%22%3A-1%2C%22year%22%3A-1%2C%22sort%22%3A2%2C%22get_tags%22%3A1%2C%22sin%22%3A${start}%2C%22num%22%3A${SINGLE_REQUEST_COUNT}%2C%22click_albumid%22%3A0%7D%2C%22module%22%3A%22music.web_album_library%22%7D%7D`
 }
 
 /**
