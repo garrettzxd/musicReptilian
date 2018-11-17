@@ -8,6 +8,7 @@ mysql.select(sql).then((data) => {
 	for(let item of data) {
 		console.log(item.singer_mid);
 	}
+	console.log('done');
 }).catch((err) => {
 	console.log(err);
 })
