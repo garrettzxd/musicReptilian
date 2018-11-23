@@ -26,7 +26,7 @@ getAll();
  * @return {[none]} [description]
  */
 async function getAll() {
-	let ins = "INSERT INTO singer(`country`,`singer_id`,`singer_mid`, `singer_name`, `singer_pic`) VALUES ?";
+	let ins = "INSERT INTO singer(`country`, `singer_id`, `singer_mid`, `singer_name`, `singer_pic`) VALUES ?";
 	while(index <= TOTAL_PAGE) {
 		let url = getUrl(index);		//拼接爬取数据的URL
 		let res = await http(url);		//获取数据
@@ -40,6 +40,7 @@ async function getAll() {
 		}
 		let ins_res = await mysql.insert(ins, ins_data);
 		console.log('插入结果：',ins_res);
+		console.log('爬虫进度：',(i/TOTAL_PAGE).toFiexd(2)*100 + '%');
 		console.log('');
 		index++;
 	}

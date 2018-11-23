@@ -1,5 +1,5 @@
 /**
- * [dataProcessing 数据格式化，变成json更易处理]
+ * [dataProcessing 数据格式化，变成json更易处理,由于原始数据是callback返回数据类型]
  * @param  {[String]} data [原始数据]
  * @return {[Object]}      [处理后的json对象]
  */

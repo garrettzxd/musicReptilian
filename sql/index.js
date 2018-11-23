@@ -1,10 +1,10 @@
 const mysql = require('mysql')
 
 const pool = mysql.createPool({
-	host: 'localhost',
-	user: 'root',
-	password: '12345678',
-	database: 'music'
+	host     : 'localhost',
+  	user     : 'root',
+  	password : 'Garrett.00',
+  	database : 'music'
 })
 
 function insert(sql, data) {

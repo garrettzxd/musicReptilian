@@ -20,6 +20,7 @@ var option = {		//设置请求头，模拟浏览器请求，否则会被腾讯�
 
 module.exports = function http(url) {
 	option.url = url;
+	console.log('http请求中...');
 	return new Promise((reslove, reject) => {
 		request(option,function(err, res, body) {
 			err ? reject(err) : reslove(body);

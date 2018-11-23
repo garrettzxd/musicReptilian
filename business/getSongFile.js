@@ -2,7 +2,7 @@ const URL = 'http://dl.stream.qqmusic.qq.com/C400004DXFlC0nsTCZ.m4a?guid=1305987
 
 
 /**
- * [getFileVkey 根据song_mid获取对应音乐文件的下载地址]
+ * [getFileVkey 根据song_mid获取对应音乐文件的vkey & purl]
  * @return [String]
  * */
 function getFileVkey(songMid) {
@@ -10,7 +10,7 @@ function getFileVkey(songMid) {
 }
 
 /**
- * [downloadUrl 根据获取的vkey与song_mid获取下载地址]
+ * [downloadUrl 更具上面获取的vkey & purl获取音乐文件的下载地址]
  * @return [String]
  * */
 function downloadUrl(purl) {

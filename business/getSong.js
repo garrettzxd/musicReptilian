@@ -22,13 +22,13 @@ getSingerMid().then((data) => {
  * @return {[type]} [description]
  */
 async function getSong() {
-	let sql = "INSERT INTO song(`song_id`,`song_mid`,`song_name`, `song_orig`, `song_type`, `vid`, `album_id`, `album_mid`, `album_name`, `belong_cd`, `singer_mid`) VALUES ?";
+	let sql = "INSERT INTO song( `song_id`, `song_mid`, `song_name`,  `song_orig`,  `song_type`, `str_media_mid`, `stream`, `album_mid`, `belong_cd`, `is_only`, `singer_mid`) VALUES ?";
 	while(singer_mid_list.length) {
 		try {
 			let url = getUrl(curr_mid);
 			let res = await http(url);
 			console.log('爬取结果：',res.slice(0,100));
-			res = setSqlData(dataProcessing(res));
+			res = setSqlData(dataProcessing(res), curr_mid);
 			if (res.length) {
 				let insert_result = await mysql.insert(sql, res);
 				console.log('插入结果：',insert_result);
@@ -36,13 +36,13 @@ async function getSong() {
 			}else {
 				console.log('数据为空！跳过该请求！');
 			}
-			console.log('error_times',error_times);
 			console.log('');
 			curr_mid = singer_mid_list.shift();
 		}catch(err) {
 			console.log('任务出现异常：', err);
 			error_times++;
 		}
+		console.log('异常次数：',error_times);
 	}
 }
 
@@ -52,7 +52,8 @@ async function getSong() {
  */
 async function getSingerMid() {
 	let singer_mid_list = [];
-	let sql = "SELECT singer_mid FROM singer";
+	// let sql = "SELECT singer_mid FROM singer";
+	let sql = "SELECT singer_mid FROM singer LIMIT 10060,27304";
 	let res = await mysql.select(sql);
 	for(let item of res) {
 		singer_mid_list.push(item.singer_mid);
@@ -65,7 +66,7 @@ async function getSingerMid() {
  * @param {[Object]} data [原始对象数据]
  * @return {[Array]} [[],[],[],...]格式的数据
  */
-function setSqlData(data) {
+function setSqlData(data, singer_mid) {
 	let result = [];
 	let list = data.data.list;
 	for(let item of list) {
@@ -76,12 +77,12 @@ function setSqlData(data) {
 		curr_array.push(music_data.songname);
 		curr_array.push(music_data.songorig);
 		curr_array.push(music_data.songtype);
-		curr_array.push(music_data.vid);
-		curr_array.push(music_data.albumid);
+		curr_array.push(music_data.strMediaMid);
+		curr_array.push(music_data.stream);
 		curr_array.push(music_data.albummid);
-		curr_array.push(music_data.albumname);
 		curr_array.push(music_data.belongCD);
-		curr_array.push(music_data.singer[0].mid);
+		curr_array.push(music_data.isonly);
+		curr_array.push(singer_mid);
 		result.push(curr_array);
 	}
 	return result;
@@ -94,7 +95,7 @@ function setSqlData(data) {
  */
 function getUrl(mid) {
 	const BEGIN = 0;		//开始位置
-	const NUMBER = 50;		//单次数量
+	const NUMBER = 200;		//单次数量
 	const QQ_NUMBER = 977563190;
 	return `${BASE_URL}g_tk=347344524&jsonpCallback=MusicJsonCallbacksinger_track&loginUin=${QQ_NUMBER}&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8&notice=0platform=yqq&needNewCode=0&singermid=${mid}&order=listen&begin=${BEGIN}&num=${NUMBER}&songstatus=1`;
 }
